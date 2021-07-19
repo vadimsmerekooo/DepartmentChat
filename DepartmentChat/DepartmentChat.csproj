@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>aspnet-DepartmentChat-822FD771-3485-486F-9551-80C8848EB801</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.15" />
+  </ItemGroup>
+
+</Project>
