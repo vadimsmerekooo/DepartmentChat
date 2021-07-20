@@ -10,19 +10,30 @@ namespace DepartmentChat.Services
         //{
         //    Clients.All.SendAsync("Send", message);
         //}
-        public ChatHub()
+
+        public async Task SendMessage(string user, string message, string room, bool join)
         {
-            Join();
+            if (join)
+            {
+                await JoinRoom(room).ConfigureAwait(false);
+                await Clients.Group(room).SendAsync("ReceiveMessage", user, " присоеденился к комнате " + room).ConfigureAwait(true);
+
+            }
+            else
+            {
+                await Clients.Group(room).SendAsync("ReceiveMessage", user, message).ConfigureAwait(true);
+
+            }
         }
 
-        public Task Join()
+        public Task JoinRoom(string roomName)
         {
-            return Groups.AddToGroupAsync(Context.ConnectionId, "foo");
+            return Groups.AddToGroupAsync(Context.ConnectionId, roomName);
         }
 
-        public async Task Send(string message)
+        public Task LeaveRoom(string roomName)
         {
-            await Clients.Group("foo").SendAsync("Send", Context.User.Identity.Name + " joined.");
+            return Groups.RemoveFromGroupAsync(Context.ConnectionId, roomName);
         }
     }
 }

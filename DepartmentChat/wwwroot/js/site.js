@@ -2,18 +2,24 @@
     .withUrl("/mainhubchats")
     .build();
 
-hubConnection.on("Send", function (data) {
-
-    let elem = document.createElement("li");
-    elem.appendChild(document.createTextNode(data));
-    let firstElem = document.getElementById("chatroom").firstChild;
-    document.getElementById("chatroom").insertBefore(elem, firstElem);
+hubConnection.on("ReceiveMessage", function (userName, message) {
+    document.getElementById("chatroom").insertAdjacentHTML('beforeend', "<p>" + userName + ": " + message + "</p>");
 
 });
 
-document.getElementById("sendBtn").addEventListener("click", function (e) {
-    let message = document.getElementById("message").value;
-    hubConnection.invoke("Send", message);
+document.getElementById("sendButton").addEventListener("click", function (e) {
+    var user = document.getElementById("userInput").value;
+    var message = document.getElementById("messageInput").value;
+    var room = document.getElementById("room").value;
+    hubConnection.invoke("SendMessage", user, message, room, false);
 });
+
+document.getElementById("joinButton").addEventListener("click", function (e) {
+    var room = document.getElementById("room").value;
+    var user = document.getElementById("userInput").value;
+    var message = document.getElementById("messageInput").value;
+    hubConnection.invoke("SendMessage", user, message, room, true);
+});
+
 
 hubConnection.start();
