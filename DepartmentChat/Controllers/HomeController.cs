@@ -6,26 +6,18 @@ using Microsoft.AspNetCore.SignalR;
 using System.Linq;
 using System.Threading.Tasks;
 using DepartmentChat.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DepartmentChat.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
-        IHubContext<ChatHub> hubContext;
-        public HomeController(IHubContext<ChatHub> hubContext)
-        {
-            this.hubContext = hubContext;
-        }
-
+        [Route("")]
+        [Route("chats")]
         public IActionResult Index()
         {
             return View();
-        }
-        [HttpPost]
-        public async Task<IActionResult> Create(string product)
-        {
-            await hubContext.Clients.All.SendAsync("Notify", $"Добавлено: {product} - {DateTime.Now.ToShortTimeString()}");
-            return RedirectToAction("Index");
         }
     }
 }

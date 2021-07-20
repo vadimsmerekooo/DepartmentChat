@@ -1,4 +1,19 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿const hubConnection = new signalR.HubConnectionBuilder()
+    .withUrl("/mainhubchats")
+    .build();
 
-// Write your JavaScript code.
+hubConnection.on("Send", function (data) {
+
+    let elem = document.createElement("li");
+    elem.appendChild(document.createTextNode(data));
+    let firstElem = document.getElementById("chatroom").firstChild;
+    document.getElementById("chatroom").insertBefore(elem, firstElem);
+
+});
+
+document.getElementById("sendBtn").addEventListener("click", function (e) {
+    let message = document.getElementById("message").value;
+    hubConnection.invoke("Send", message);
+});
+
+hubConnection.start();
