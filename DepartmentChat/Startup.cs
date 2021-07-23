@@ -1,4 +1,5 @@
 using DepartmentChat.Data;
+using DepartmentChat.Models;
 using DepartmentChat.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -23,6 +24,9 @@ namespace DepartmentChat
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddDbContext<ChatContext>(options =>
+                options.UseSqlServer("Server=PROGRAMMER;Database=DepartmentChatModel;Trusted_Connection=True;MultipleActiveResultSets=true"));
             services.AddSignalR();
         }
 

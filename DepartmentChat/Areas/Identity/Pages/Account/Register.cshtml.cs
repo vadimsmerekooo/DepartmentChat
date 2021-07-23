@@ -47,6 +47,11 @@ namespace DepartmentChat.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
+            [Display(Name = "Фамилия и имя")]
+            [DataType(DataType.Text)]
+            public string Name { get; set; }
+
+            [Required]
             [Display(Name = "Логин")]
             public string Login { get; set; }
 
@@ -74,7 +79,7 @@ namespace DepartmentChat.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new DepartmentUser { UserName = Input.Login, Email = Input.Login, EmailConfirmed = true };
+                var user = new DepartmentUser { UserName = Input.Login, Email = Input.Name, EmailConfirmed = true };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

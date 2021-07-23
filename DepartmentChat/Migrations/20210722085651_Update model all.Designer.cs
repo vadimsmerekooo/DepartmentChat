@@ -4,14 +4,16 @@ using DepartmentChat.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DepartmentChat.Migrations
 {
     [DbContext(typeof(ChatIdentityContext))]
-    partial class ChatIdentityContextModelSnapshot : ModelSnapshot
+    [Migration("20210722085651_Update model all")]
+    partial class Updatemodelall
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,6 +29,9 @@ namespace DepartmentChat.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ChatId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -38,6 +43,9 @@ namespace DepartmentChat.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("int");
+
                     b.Property<byte[]>("Icon")
                         .HasColumnType("varbinary(max)");
 
@@ -46,6 +54,9 @@ namespace DepartmentChat.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("MessageId")
+                        .HasColumnType("int");
 
                     b.Property<string>("NormalizedEmail")
                         .HasColumnType("nvarchar(256)")
@@ -76,6 +87,16 @@ namespace DepartmentChat.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ChatId");
+
+                    b.HasIndex("GroupId")
+                        .IsUnique()
+                        .HasFilter("[GroupId] IS NOT NULL");
+
+                    b.HasIndex("MessageId")
+                        .IsUnique()
+                        .HasFilter("[MessageId] IS NOT NULL");
+
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
 
@@ -85,6 +106,83 @@ namespace DepartmentChat.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("DepartmentChat.Models.Chat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("TypeChat")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Chat");
+                });
+
+            modelBuilder.Entity("DepartmentChat.Models.ContentMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MessageId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MessageId")
+                        .IsUnique();
+
+                    b.ToTable("ContentMessage");
+                });
+
+            modelBuilder.Entity("DepartmentChat.Models.Group", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ChatId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Purpose")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatId")
+                        .IsUnique();
+
+                    b.ToTable("Group");
+                });
+
+            modelBuilder.Entity("DepartmentChat.Models.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ChatId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatId");
+
+                    b.ToTable("Message");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -220,6 +318,48 @@ namespace DepartmentChat.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("DepartmentChat.Areas.Identity.Data.DepartmentUser", b =>
+                {
+                    b.HasOne("DepartmentChat.Models.Chat", "Chats")
+                        .WithMany("Users")
+                        .HasForeignKey("ChatId");
+
+                    b.HasOne("DepartmentChat.Models.Group", "Groups")
+                        .WithOne("Author")
+                        .HasForeignKey("DepartmentChat.Areas.Identity.Data.DepartmentUser", "GroupId");
+
+                    b.HasOne("DepartmentChat.Models.Message", "Messages")
+                        .WithOne("User")
+                        .HasForeignKey("DepartmentChat.Areas.Identity.Data.DepartmentUser", "MessageId");
+                });
+
+            modelBuilder.Entity("DepartmentChat.Models.ContentMessage", b =>
+                {
+                    b.HasOne("DepartmentChat.Models.Message", "Message")
+                        .WithOne("ContentMessage")
+                        .HasForeignKey("DepartmentChat.Models.ContentMessage", "MessageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DepartmentChat.Models.Group", b =>
+                {
+                    b.HasOne("DepartmentChat.Models.Chat", "Chat")
+                        .WithOne("Group")
+                        .HasForeignKey("DepartmentChat.Models.Group", "ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DepartmentChat.Models.Message", b =>
+                {
+                    b.HasOne("DepartmentChat.Models.Chat", "Chat")
+                        .WithMany("Messages")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
