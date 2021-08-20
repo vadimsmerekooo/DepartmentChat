@@ -26,7 +26,7 @@ namespace DepartmentChat
             services.AddControllersWithViews();
 
             services.AddDbContext<ChatContext>(options =>
-                options.UseSqlServer("Server=PROGRAMMER;Database=DepartmentChatModel;Trusted_Connection=True;MultipleActiveResultSets=true"));
+                options.UseSqlServer(Configuration["ConnectionStrings:ChatIdentityContextConnection"]));
             services.AddSignalR();
         }
 
@@ -39,6 +39,9 @@ namespace DepartmentChat
             }
             else
             {
+                
+                app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }

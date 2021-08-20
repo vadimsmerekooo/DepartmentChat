@@ -1,103 +1,25 @@
-﻿@using DepartmentChat.Areas.Identity.Data;
-@inject  Microsoft.AspNetCore.Identity.UserManager<DepartmentUser> UserManager
-
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
+﻿<script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/signalr/dist/browser/signalr.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
 <script src="~/js/vendor.js"></script>
 <script src="~/js/template.js"></script>
-
-
-<script>
-    const hubConnection = new signalR.HubConnectionBuilder()
-        .withUrl("/mainhubchats")
-        .build();
-
-
-
-    hubConnection.on("ReceiveMessage", function (roomName, userName, message, date, type) {
-
-        var messageOut = `<div class="message message-out">
-                            <a href="#" data-bs-toggle="modal" data-bs-target="#modal-profile" class="avatar avatar-responsive">`
-            +
-            @{
-                var user = UserManager.FindByEmailAsync().Result;
-                if (user.Icon is null)
-                {
-
-                                                            <div class="avatar">
-                <span class="avatar-text">@UserManager.</span>
-                                                            </div>
-                }
-            }
-            +
-                                    `
-                            </a>
-
-                            <div class="message-inner">
-                                <div class="message-body">
-                                    <div class="message-content">
-                                        <div class="message-text">
-                                            <p style="word-break: break-word;">` + message + `</p >
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="message-footer">
-                                    <span class="extra-small text-muted">` + date + `</span>
-                                </div>
-                            </div>
-                        </div>`;
-        var messageDevider = `<div class="message-divider">
-                                <small class="text-muted">Monday, Sep 16</small>
-                            </div>`;
-
-        var messageIn = `<div class="message">
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#modal-user-profile" class="avatar avatar-responsive">
-                            <img class="avatar-img" src="img/avatars/11.jpg" alt="">
-                        </a>
-
-                        <div class="message-inner">
-                            <div class="message-body">
-                                <div class="message-content">
-                                    <div class="message-text">
-                                        <p>` + message + `</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="message-footer">
-                                <span class="extra-small text-muted">` + date + `</span>
-                            </div>
-                        </div>
-                    </div>`;
-        if (document.getElementById("userInput").value == userName) {
-            document.getElementById("chatroom" + roomName).insertAdjacentHTML('beforeend', messageOut);
-                }
-        else {
-            document.getElementById("chatroom" + roomName).insertAdjacentHTML('beforeend', messageIn);
-            }
-
-
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script type="text/javascript">
+const handlerLinkClick = (e) => {
+    $(document).ready(function () {
+        $('#result').load('@Url.Action("Chat", "Home")?chatCode=' + e.target.id);
+    scrollToLowerChat();
     });
-    function SendMessage(e) {
-        var user = document.getElementById("userInput").value;
-        var message = document.getElementById("messageInput").value;
-        var room = document.getElementById("room").value;
-        hubConnection.invoke("SendMessage", user, message, room, false);
-        document.getElementById("messageInput").value = '';
-    }
+}
 
 
-    document.getElementById("joinButton").addEventListener("click", function (e) {
-        var room = document.getElementById("room").value;
-        var user = document.getElementById("userInput").value;
-        var message = document.getElementById("messageInput").value;
-        document.getElementById("chatroom").id = "chatroom" + room;
-        hubConnection.invoke("SendMessage", user, message, room, true);
+const links = document.querySelectorAll(".chat-list");
+links.forEach((linkItem) => {
+    linkItem.addEventListener("click", handlerLinkClick)
+});
+
+function updateSidebarChats(){
+    $(document).ready(function () {
+            $('#sidebarchats').load('@Url.Action("SidebarChatUpdate", "Home")');
     });
-
-
-    hubConnection.start();
+}
 </script>

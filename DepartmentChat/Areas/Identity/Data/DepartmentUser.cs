@@ -10,7 +10,7 @@ namespace DepartmentChat.Areas.Identity.Data
     public class DepartmentUser : IdentityUser
     {
         public byte[] Icon { get; set; }
-
+        public int UserChatId { get; set; }
 
 
     }

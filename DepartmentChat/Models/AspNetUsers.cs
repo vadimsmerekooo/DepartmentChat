@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-// Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
-// If you have enabled NRTs for your project, then un-comment the following line:
-// #nullable disable
-
-namespace DepartmentChat.Modelsdelete
+namespace DepartmentChat.Models
 {
     public partial class AspNetUsers
     {
@@ -33,6 +29,10 @@ namespace DepartmentChat.Modelsdelete
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
         public byte[] Icon { get; set; }
+        public int UserChatId { get; set; }
+
+        public List<Chats> Chats { get; set; } = new List<Chats>();
+        public List<Messages> Messages { get; set; } = new List<Messages>();
 
         public virtual ICollection<AspNetUserClaims> AspNetUserClaims { get; set; }
         public virtual ICollection<AspNetUserLogins> AspNetUserLogins { get; set; }

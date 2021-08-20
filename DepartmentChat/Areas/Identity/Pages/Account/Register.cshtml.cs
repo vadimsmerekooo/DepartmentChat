@@ -8,11 +8,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using DepartmentChat.Areas.Identity.Data;
+using DepartmentChat.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace DepartmentChat.Areas.Identity.Pages.Account
@@ -79,7 +81,7 @@ namespace DepartmentChat.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new DepartmentUser { UserName = Input.Login, Email = Input.Name, EmailConfirmed = true };
+                var user = new DepartmentUser { UserName = Input.Login, Email = Input.Name, EmailConfirmed = true, UserChatId = new Random().Next(int.MaxValue)};
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

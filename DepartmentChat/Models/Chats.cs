@@ -1,9 +1,6 @@
-﻿using DepartmentChat.Areas.Identity.Data;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
+using DepartmentChat.Areas.Identity.Data;
 
 namespace DepartmentChat.Models
 {
@@ -11,17 +8,18 @@ namespace DepartmentChat.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public List<Messages> Messages { get; set; }
-        [NotMapped]
-        public List<string> Users { get; set; }
-        public TypeChat TypeChat { get; set; } = TypeChat.Direct;
+        public List<Messages> Messages { get; set; } 
+        public int Url { get; set; }
+        public List<AspNetUsers> AspNetUsers { get; set; } = new List<AspNetUsers>();
+        public TypeChat TypeChat { get; set; }
         public Groups Groups { get; set; }
+        
 
     }
 
     public enum TypeChat
     {
-        Group,
-        Direct
+        Direct,
+        Group
     }
 }

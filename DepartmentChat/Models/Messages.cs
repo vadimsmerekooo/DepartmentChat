@@ -12,7 +12,8 @@ namespace DepartmentChat.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public string User { get; set; }
+        public string UserId { get; set; }
+        public AspNetUsers User { get; set; }
 
         public int ChatId { get; set; }
         public Chats Chat { get; set; }
