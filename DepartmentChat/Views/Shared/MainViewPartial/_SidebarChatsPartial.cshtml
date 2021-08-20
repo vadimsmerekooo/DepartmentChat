@@ -1,0 +1,129 @@
+@model ChatsUserViewModel
+
+<div class="card-list chat-list">
+                    @{
+                        foreach (Chats chatItem in Model.Chats)
+                        {
+                            switch (chatItem.TypeChat)
+                            {
+                                case TypeChat.Direct:
+                                    AspNetUsers directUser = chatItem.AspNetUsers.FirstOrDefault(user => user.Id != Model.UserView.Id);
+                                    Messages lastMessageDirect = chatItem.Messages.Any() ? chatItem.Messages.Last() : null;
+
+                                    <a class="card border-0 text-reset" id="@chatItem.Url">
+                                        <div class="card-body" id="@chatItem.Url">
+                                            <div class="row gx-5" id="@chatItem.Url">
+                                                <div class="col-3" id="@chatItem.Url">
+                                                    <div class="avatar" id="@chatItem.Url">
+                                                        @if (directUser.Icon is null)
+                                                        {
+                                                            <span class="avatar-text" id="@chatItem.Url">@(directUser.Email.First())</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <img class="avatar-img" src="data:image/png;base64,@System.Convert.ToBase64String(directUser.Icon)" alt="" id="@chatItem.Url">
+                                                        }
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-9" id="@chatItem.Url">
+                                                    <div class="d-flex align-items-center mb-3" id="@chatItem.Url">
+                                                        <h5 class="me-auto mb-0" id="@chatItem.Url">@(directUser.Email)</h5>
+                                                        @if (lastMessageDirect != null)
+                                                        {
+                                                            <span id="@chatItem.Url" class="text-muted extra-small ms-2">@(lastMessageDirect.Created.ToShortTimeString())</span>
+                                                        }
+                                                    </div>
+
+                                                    <div id="@chatItem.Url" class="d-flex align-items-center">
+                                                        <div id="@chatItem.Url" class="line-clamp me-auto">
+                                                            @if (lastMessageDirect != null)
+                                                            {
+                                                                if (lastMessageDirect.User.Id == Model.UserView.Id)
+                                                                {
+                                                                    <p id="chatmessage-@chatItem.Url" class="message-text-sidebar">Вы: @lastMessageDirect.ContentMessage.Content</p>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <p id="chatmessage-@chatItem.Url" class="message-text-sidebar">@lastMessageDirect.User.Email.Split(' ')[0]: @lastMessageDirect.ContentMessage.Content</p>
+                                                                }
+                                                            }
+                                                        </div>
+
+                                                        @* <div class="badge badge-circle bg-primary ms-5"> *@
+                                                        @*     <span>3</span> *@
+                                                        @* </div> *@
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><!-- .card-body -->
+                                    </a>
+                                    break;
+                                case TypeChat.Group:
+                                    <a asp-controller="Home" asp-action="Chat" asp-route-chatCode="@chatItem.Url" class="card border-0 text-reset">
+                                        <div class="card-body">
+                                            <div class="row gx-5">
+                                                <div class="col-auto">
+                                                    <div class="avatar avatar-online">
+                                                        <img src="~/img/avatars/7.jpg" alt="#" class="avatar-img">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col">
+                                                    <div class="d-flex align-items-center mb-3">
+                                                        <h5 class="me-auto mb-0">William Wright</h5>
+                                                        <span class="text-muted extra-small ms-2">12:45 PM</span>
+                                                    </div>
+
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="line-clamp me-auto">
+                                                            Hello! Yeah, I'm going to meet my friend of mine at the departments stores now.
+                                                        </div>
+
+                                                        <div class="badge badge-circle bg-primary ms-5">
+                                                            <span>3</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><!-- .card-body -->
+
+                                        <div class="card-footer">
+                                            <div class="row align-items-center gx-4">
+                                                <div class="col-auto">
+                                                    <div class="avatar avatar-xs">
+                                                        <img class="avatar-img" src="~/img/avatars/bootstrap.svg" alt="Bootstrap Community">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col">
+                                                    <h6 class="mb-0">Bootstrap Community</h6>
+                                                </div>
+
+                                                <div class="col-auto">
+                                                    <div class="avatar-group">
+                                                        <div class="avatar avatar-xs">
+                                                            <img src="~/img/avatars/12.jpg" alt="#" class="avatar-img">
+                                                        </div>
+
+                                                        <div class="avatar avatar-xs">
+                                                            <img src="~/img/avatars/11.jpg" alt="#" class="avatar-img">
+                                                        </div>
+
+                                                        <div class="avatar avatar-xs">
+                                                            <img src="~/img/avatars/9.jpg" alt="#" class="avatar-img">
+                                                        </div>
+
+                                                        <div class="avatar avatar-xs">
+                                                            <span class="avatar-text">+5</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div><!-- .row -->
+                                        </div><!-- .card-footer -->
+                                    </a>
+                                    break;
+                            }
+                        }
+                    }
+                </div>
