@@ -13,6 +13,20 @@
     <partial name="MainViewPartial/_SidebarPartial" model="Model"/>
     <!-- Sidebar -->
 
+<div id="loader-chat" class="ml-loader">
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                            </div>
     @if (Model.ViewModel != null)
     {
         
@@ -167,10 +181,11 @@
 <script>    
           const hubConnection = new signalR.HubConnectionBuilder()
               .withUrl("/mainhubchats")
+              .withAutomaticReconnect()
+              .configureLogging(signalR.LogLevel.Information)
               .build();
             
           hubConnection.on("ReceiveMessage", function (roomName, UserSend, userName, iconBlock, message, date) {
-              console.log("Message recice: " + message)
               const messageOut = `<div class="message message-out">
                                   <a href="#" data-bs-toggle="modal" data-bs-target="#modal-profile" class="avatar avatar-responsive">
  ${iconBlock}                               
@@ -215,6 +230,10 @@
                           </div>`;
               
               
+              var elem = document.getElementById("chatempty");
+              if (elem !== null){
+                elem.parentNode.removeChild(elem);
+              }
               
               
               if (`@Model.UserView.Id` === UserSend) {
@@ -228,7 +247,6 @@
                   // document.getElementById("chatmessage-" + roomName).innerHTML = `${userName}: ${message}`;
                   }
       scrollToLowerChat();
-              console.log("Message add block")
           });
           function SendMessage(room, user) {
               const message = document.getElementById("messageInput").value;

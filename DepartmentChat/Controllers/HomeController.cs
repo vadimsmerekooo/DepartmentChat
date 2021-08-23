@@ -92,7 +92,6 @@ namespace DepartmentChat.Controllers
         }
         
         
-        [Route("chats/connect/{userChatCode:int}")]
         public async Task<IActionResult> ChatConnect(int userChatCode)
         {
             AspNetUsers user = await _context.AspNetUsers
@@ -105,7 +104,7 @@ namespace DepartmentChat.Controllers
                     x.AspNetUsers.Contains(user) && x.AspNetUsers.Contains(userConnect) &&
                     x.TypeChat == TypeChat.Direct);
                 
-                return RedirectToAction(nameof(Chat), new { chatCode = chat.Url });
+                return await Chat(chat.Url);
             }
             else
             {
@@ -116,7 +115,7 @@ namespace DepartmentChat.Controllers
                 };
                 await _context.Chats.AddAsync(chat);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Chat), new { chatCode = chat.Url });
+                return await Chat(chat.Url);
             }
 
         }

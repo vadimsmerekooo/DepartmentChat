@@ -284,42 +284,16 @@
                                         <h5>
                                             @if (Model.Chats.Any(chat => chat.AspNetUsers.Any(userChat => userChat.Id == user.Id)))
                                             {
-                                                <a asp-controller="Home" asp-action="Chat" asp-route-chatCode="@Model.Chats.FirstOrDefault(chat => chat.AspNetUsers.Any(userChat => userChat.Id == user.Id)).Url">@user.Email</a>
+                                                <a href="javascript:enterToChat(@Model.Chats.FirstOrDefault(chat => chat.AspNetUsers.Any(userChat => userChat.Id == user.Id)).Url);">@user.Email</a>
                                             }
                                             else
                                             {
-                                                <a asp-controller="Home" asp-action="ChatConnect" asp-route-userChatCode="@user.UserChatId">@user.Email</a>
+                                                <a href="javascript:connectToChat(@user.UserChatId);">@user.Email</a>
                                             }
                                         </h5>
                                         @* <p>last seen 3 days ago</p> *@
                                     </div>
-
-                                    <div class="col-auto">
-                                        <!-- Dropdown -->
-                                        <div class="dropdown">
-                                            <a class="icon text-muted" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
-                                                    <circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle>
-                                                </svg>
-                                            </a>
-
-                                            <ul class="dropdown-menu">
-                                                <li>
-                                                    @if (Model.Chats.Any(chat => chat.AspNetUsers.Any(userChat => userChat.Id == user.Id)))
-                                                    {
-                                                        <a asp-controller="Home" asp-action="Chat" asp-route-chatCode="@Model.Chats.FirstOrDefault(chat => chat.AspNetUsers.Any(userChat => userChat.Id == user.Id)).Url">Отправить сообщение</a>
-                                                    }
-                                                    else
-                                                    {
-                                                        <a asp-controller="Home" asp-action="ChatConnect" asp-route-userChatCode="@user.UserChatId">Отправить сообщение</a>
-                                                    }
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
                                 </div>
-
                             </div>
                         </div>
                     }
@@ -361,7 +335,9 @@
                 <!-- Chats -->
 
                 <div id="sidebarchats" class="card-list chat-list">
+                    
                     <partial name="MainViewPartial/_SidebarChatsPartial" model="@Model"/>
+
                 </div>
                 <!-- Chats -->
             </div>

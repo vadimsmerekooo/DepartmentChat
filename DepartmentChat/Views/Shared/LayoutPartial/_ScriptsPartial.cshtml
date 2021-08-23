@@ -4,10 +4,20 @@
 <script src="~/js/template.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script type="text/javascript">
+function scrollToLowerChat(){
+      const objDiv = document.getElementById("chat-body-message");
+      objDiv.scrollTop = objDiv.scrollHeight;
+    }
 const handlerLinkClick = (e) => {
     $(document).ready(function () {
-        $('#result').load('@Url.Action("Chat", "Home")?chatCode=' + e.target.id);
-    scrollToLowerChat();
+        document.getElementById('result').style.display = 'none';
+        document.getElementById('loader-chat').style.display = 'block';
+        
+        $('#result').load('@Url.Action("Chat", "Home")?chatCode=' + e.target.id, function (){
+            document.getElementById('loader-chat').style.display = 'none';
+        document.getElementById('result').style.display = 'block';
+            scrollToLowerChat();
+        });        
     });
 }
 
@@ -22,4 +32,23 @@ function updateSidebarChats(){
             $('#sidebarchats').load('@Url.Action("SidebarChatUpdate", "Home")');
     });
 }
+
+function connectToChat(idChat){
+        document.getElementById('result').style.display = 'none';
+        document.getElementById('loader-chat').style.display = 'block';
+        $(document).ready(function () {
+                $('#result').load('@Url.Action("ChatConnect", "Home")?userChatCode=' + idChat, function (){
+                     document.getElementById('loader-chat').style.display = 'none';
+                     document.getElementById('result').style.display = 'block';
+                     scrollToLowerChat();
+                });
+            scrollToLowerChat();
+        });
+}
+function enterToChat(idChat){
+    $(document).ready(function () {
+        $('#result').load('@Url.Action("Chat", "Home")?chatCode=' + idChat).when();
+    scrollToLowerChat();
+    });
+    }
 </script>
